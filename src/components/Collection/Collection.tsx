@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Memory } from "../Memory";
-import { memories as mockMemories } from "../../data";
 import { Input } from "../Input";
 import { ActionPanel } from "../ActionPanel";
 import { LoadingScreen } from "../LoadingScreen";
-import { MemoryType } from "../../shared/types";
-import { useAsync } from "../../shared/hooks";
+import { FadeIn } from "../FadeIn";
+import { useGoogleDrive } from "../../shared/hooks/useGoogleDrive";
+import { useGoogleAuth } from "../../shared/hooks/useGoogleAuth";
+import { useGoogleApi } from "../../shared/hooks/useGoogleApi";
 
 const Collection = styled.div`
   background-color: white;
@@ -14,6 +15,7 @@ const Collection = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
+  min-height: 400px;
 `;
 
 const Searchbar = styled.div`
@@ -34,30 +36,62 @@ const LoadingScreenWrapper = styled.div`
   margin: 15px 0;
 `;
 
-const fetchMemories = () =>
-  new Promise((resolve) => setTimeout(() => resolve(mockMemories), 7000));
+const StyledFadeIn = styled(FadeIn)`
+  min-height: 430px;
+`;
+
+const Loading = () => (
+  <LoadingScreenWrapper>
+    <LoadingScreen />
+  </LoadingScreenWrapper>
+);
 
 export default () => {
-  const { execute, pending, value: memories } = useAsync(fetchMemories, true);
+  const { isGoogleApiReady } = useGoogleApi();
+  const { isUserAuthenticated } = useGoogleAuth();
+  const { files: memories, isFetchingFiles, fetchFiles } = useGoogleDrive();
+
+  if (!isGoogleApiReady) {
+    return (
+      <Collection>
+        <Loading />
+      </Collection>
+    );
+  }
+
+  if (!isUserAuthenticated) {
+    return (
+      <Collection>
+        <span>please log in</span>
+      </Collection>
+    );
+  }
+
+  console.log({ isFetchingFiles, memories });
+
+  const refresh = fetchFiles || (() => {});
 
   return (
     <Collection>
-      {pending ? (
+      {isFetchingFiles ? (
         <LoadingScreenWrapper>
           <LoadingScreen />
         </LoadingScreenWrapper>
       ) : (
-        <>
+        <StyledFadeIn>
           <Searchbar>
             <Input whiteBackground placeholder="search" />
           </Searchbar>
-          <ActionPanel refresh={execute} />
+          <ActionPanel refresh={refresh} />
           <Memories>
             {memories &&
               // @ts-ignore
-              memories.map((memory) => <Memory {...memory} />)}
+              memories.map(({ name, ...memory }) => (
+                // @ts-ignore
+                <Memory value={name} {...memory} />
+              ))}
           </Memories>
-        </>
+        </StyledFadeIn>
       )}
     </Collection>
   );

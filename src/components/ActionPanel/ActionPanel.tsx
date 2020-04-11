@@ -20,7 +20,7 @@ interface ActionPanelProps {
 
 export const ActionPanel = ({ refresh }: ActionPanelProps) => (
   <ActionPanelWrapper>
-    <Button>Add a card</Button>
+    <Button>Add a memory</Button>
     <Button isSecondary onClick={refresh}>
       Refresh
     </Button>

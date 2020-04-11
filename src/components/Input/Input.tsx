@@ -37,6 +37,10 @@ const InputWrapper = styled.div`
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   whiteBackground?: boolean;
+  placeholder?: string; // @TODO figure out why this is ncessary
+  autoFocus?: boolean; // @TODO figure out why this is ncessary
+  defaultValue?: string; // @TODO figure out why this is ncessary
+  onBlur?: any;
 }
 
 export default (props: InputProps) => {

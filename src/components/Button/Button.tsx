@@ -13,13 +13,15 @@ export const Button = styled.button<{ isSecondary?: boolean }>(
       cursor: pointer;
       box-shadow: inset -6px -8px 0 #cc1a00;
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 300;
       outline: none;
       transition: all 0.25s ease-in;
       width: 100%;
       font-weight: 400;
       font-family: monospace;
+      height: 40px;
+      padding-top: 8px;
       &:active {
         box-shadow: none;
       }

@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-let auth2;
-
 /**
  * Client Id
  * 812428686450-iuhv7h62rq65k290vsqjfrq2n4p7j1v4.apps.googleusercontent.com
@@ -13,8 +10,10 @@ const loadGoogleAPI = (onLoad) => {
     return setTimeout(() => loadGoogleAPI(onLoad), 1000);
   }
 
+  const { gapi } = window;
+
   gapi.load("auth2", () => {
-    auth2 = gapi.auth2
+    gapi.auth2 = gapi.auth2
       .init({
         clientId:
           "812428686450-iuhv7h62rq65k290vsqjfrq2n4p7j1v4.apps.googleusercontent.com",
@@ -51,14 +50,16 @@ const loadGoogleAPI = (onLoad) => {
 const isGoogleApiLoaded = new Promise(loadGoogleAPI);
 
 export const signIn = () =>
-  isGoogleApiLoaded.then(() => gapi.auth2.getAuthInstance().signIn());
+  isGoogleApiLoaded.then(() => window.gapi.auth2.getAuthInstance().signIn());
 
-export const isUserSignedIn = () =>
-  isGoogleApiLoaded.then(() => gapi.auth2.getAuthInstance().isSignedIn.get());
+export const isUserAuthenticated = () =>
+  isGoogleApiLoaded.then(() =>
+    window.gapi.auth2.getAuthInstance().isSignedIn.get()
+  );
 
 export const getUserProfile = () =>
   isGoogleApiLoaded.then(() => {
-    const auth = gapi.auth2.getAuthInstance();
+    const auth = window.gapi.auth2.getAuthInstance();
     const user = auth.currentUser.get();
     const profile = user.getBasicProfile();
     const scopes = user.getGrantedScopes();
@@ -75,7 +76,7 @@ export const getUserProfile = () =>
 
 export const getDriveInfo = () =>
   isGoogleApiLoaded.then(() => {
-    gapi.client.drive.files
+    window.gapi.client.drive.files
       .list({
         pageSize: 10,
         fields: "nextPageToken, files(id, name)",
@@ -86,7 +87,7 @@ export const getDriveInfo = () =>
 const appName = "note-app";
 
 const createFolder = async (folderName) => {
-  const folderId = await gapi.client.drive.files
+  const folderId = await window.gapi.client.drive.files
     .create({
       resource: {
         name: appName,
@@ -99,7 +100,7 @@ const createFolder = async (folderName) => {
 };
 
 const getFileList = async () => {
-  const files = await gapi.client.drive.files
+  const files = await window.gapi.client.drive.files
     .list()
     .then((response) => response.result.files);
   return files;
@@ -120,7 +121,7 @@ const createFile = (folderId) => {
     mimeType: "application/vnd.google-apps.folder",
     parents: [folderId],
   };
-  gapi.client.drive.files
+  window.gapi.client.drive.files
     .create({
       resource: fileMetadata,
     })

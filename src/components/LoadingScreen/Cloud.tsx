@@ -37,7 +37,7 @@ const CloudStyle = styled.div<{ size: CloudSizes; top: number }>(
       height: ${16 * size}px;
       width: ${50 * size}px;
       top: ${top}px;
-      animation: ${floatRight({ left: -50 * size })} ${2 + Math.random() * 2}s
+      animation: ${floatRight({ left: -50 * size })} ${1 + Math.random() * 2}s
         ease-in infinite;
 
       &::after,

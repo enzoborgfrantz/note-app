@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
-import {
-  signIn,
-  isUserSignedIn,
-  getUserProfile,
-  getDriveInfo,
-} from "./googleApi";
 import { Input } from "./components/Input";
 import { Logo } from "./components/Logo";
 import { Button } from "./components/Button";
 import { Collection } from "./components/Collection";
 import { primary } from "./shared/colors";
+import { GoogleApiProvider } from "./shared/hooks/useGoogleApi";
+import { Profile } from "./components/Profile";
+import { GoogleAuthProvider } from "./shared/hooks/useGoogleAuth";
+import { GoogleDriveProvider } from "./shared/hooks/useGoogleDrive";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -39,37 +37,33 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
-const Profile = styled.div`
-  max-width: 300px;
-`;
-
 function App() {
-  useEffect(() => {}, []);
-
   return (
-    <>
-      <GlobalStyle />
-      <AppWrapper>
-        <Header>
-          <Logo />
-          <Profile>
-            <Button onClick={signIn}>Sign in with Google</Button>
-          </Profile>
-        </Header>
-        <br />
-        <br />
-        <Collection />
-        {/* <Button
+    <GoogleApiProvider>
+      <GoogleAuthProvider>
+        <GoogleDriveProvider>
+          <GlobalStyle />
+          <AppWrapper>
+            <Header>
+              <Logo />
+              <Profile />
+            </Header>
+            <br />
+            <br />
+            <Collection />
+            {/* <Button
           onClick={() => {
-            isUserSignedIn().then(console.log);
+            isUserAuthenticated().then(console.log);
             getUserProfile().then(console.log);
             getDriveInfo().then(console.log);
           }}
         >
           Do google
         </Button> */}
-      </AppWrapper>
-    </>
+          </AppWrapper>
+        </GoogleDriveProvider>
+      </GoogleAuthProvider>
+    </GoogleApiProvider>
   );
 }
 
