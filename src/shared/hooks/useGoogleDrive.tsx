@@ -101,7 +101,7 @@ const getFileContentByFileId = async (fileId: string) => {
   return fileContent;
 };
 
-export const useGoogleDriveProvider = () => {
+const useGoogleDriveProvider = () => {
   const { isGoogleApiReady } = useGoogleApi();
   const { isUserAuthenticated } = useGoogleAuth();
   const [isFetchingFiles, setIsFetchingFiles] = useState(false);
@@ -116,7 +116,10 @@ export const useGoogleDriveProvider = () => {
     const files = (await getFiles()) || [];
     setIsFetchingFiles(false);
     setFiles(files);
+    return files;
   };
+
+  const fetchContent = (tab?: string) => {};
 
   useEffect(() => {
     if (isGoogleApiReady && isUserAuthenticated) {

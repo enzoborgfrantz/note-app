@@ -5,7 +5,7 @@ import { secondary } from "../../shared/colors";
 const Input = styled.input<InputProps>(({ whiteBackground }) => [
   css`
     width: 100%;
-    height: 45px;
+    height: 40px;
     background-color: #f7f7f7;
     box-sizing: border-box;
     padding: 5px 15px;

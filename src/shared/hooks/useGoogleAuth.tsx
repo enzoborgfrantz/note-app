@@ -21,7 +21,7 @@ const googleAuthContext = createContext<GoogleAuth>({
   isUserAuthenticated: false,
 });
 
-export const useGoogleAuthProvider = () => {
+const useGoogleAuthProvider = () => {
   const googleApi = useGoogleApi();
   const { isGoogleApiReady } = googleApi;
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
@@ -78,18 +78,18 @@ export const useGoogleAuthProvider = () => {
   return googleAuth;
 };
 
-export function GoogleAuthProvider({
+export const GoogleAuthProvider = ({
   children,
 }: {
   children: JSX.Element | JSX.Element[];
-}) {
+}) => {
   const googleAuth = useGoogleAuthProvider();
   return (
     <googleAuthContext.Provider value={googleAuth}>
       {children}
     </googleAuthContext.Provider>
   );
-}
+};
 
 export const useGoogleAuth = () => {
   return useContext<GoogleAuth>(googleAuthContext);

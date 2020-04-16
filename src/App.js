@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { css, createGlobalStyle } from "styled-components";
 
 import { Input } from "./components/Input";
 import { Logo } from "./components/Logo";
@@ -10,6 +10,7 @@ import { GoogleApiProvider } from "./shared/hooks/useGoogleApi";
 import { Profile } from "./components/Profile";
 import { GoogleAuthProvider } from "./shared/hooks/useGoogleAuth";
 import { GoogleDriveProvider } from "./shared/hooks/useGoogleDrive";
+import { ThemeProvider } from "./shared/styles/";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -22,19 +23,33 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const AppWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  padding: 15vh 15vw;
-  box-sizing: border-box;
-`;
+const AppWrapper = styled.div(({ theme }) => [
+  css`
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    padding: 5vh 15vw 5vh;
+    box-sizing: border-box;
 
-const Header = styled.div`
-  display: flex;
-  align-items: flex-start;
-  box-sizing: border-box;
-  justify-content: space-between;
+    ${theme.mobile(css`
+      padding: 15px;
+    `)}
+  `,
+]);
+
+const Header = styled.div(({ theme }) => [
+  css`
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+  `,
+]);
+
+const Content = styled.div`
+  height: 100%;
 `;
 
 function App() {
@@ -43,24 +58,16 @@ function App() {
       <GoogleAuthProvider>
         <GoogleDriveProvider>
           <GlobalStyle />
-          <AppWrapper>
-            <Header>
-              <Logo />
-              <Profile />
-            </Header>
-            <br />
-            <br />
-            <Collection />
-            {/* <Button
-          onClick={() => {
-            isUserAuthenticated().then(console.log);
-            getUserProfile().then(console.log);
-            getDriveInfo().then(console.log);
-          }}
-        >
-          Do google
-        </Button> */}
-          </AppWrapper>
+          <ThemeProvider>
+            <AppWrapper>
+              <Header>
+                <Logo />
+                <Profile />
+              </Header>
+              <br />
+              <Collection />
+            </AppWrapper>
+          </ThemeProvider>
         </GoogleDriveProvider>
       </GoogleAuthProvider>
     </GoogleApiProvider>

@@ -15,10 +15,12 @@ const ActionPanelWrapper = styled.div`
 `;
 
 interface ActionPanelProps {
-  refresh: () => void;
+  refresh?: () => void;
 }
 
-export const ActionPanel = ({ refresh }: ActionPanelProps) => (
+const noOp = () => {};
+
+export const ActionPanel = ({ refresh = noOp }: ActionPanelProps) => (
   <ActionPanelWrapper>
     <Button>Add a memory</Button>
     <Button isSecondary onClick={refresh}>

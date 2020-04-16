@@ -7,7 +7,7 @@ export enum Category {
 }
 
 export interface MemoryType {
-  id: number;
+  id: string;
   dateCreated: number;
   lastEdited: number;
   value: string;

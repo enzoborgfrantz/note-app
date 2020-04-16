@@ -14,7 +14,7 @@ const googleApiContext = createContext<GoogleApi>({
   isGoogleApiReady: false,
 });
 
-function useGoogleApiProvider() {
+const useGoogleApiProvider = () => {
   const [isGoogleApiReady, setIsGoogleApiReady] = useState(false);
   const [scriptLoaded] = useScript("https://apis.google.com/js/platform.js");
 
@@ -42,22 +42,22 @@ function useGoogleApiProvider() {
   return {
     isGoogleApiReady,
   };
-}
+};
 
-export function GoogleApiProvider({
+export const GoogleApiProvider = ({
   children,
 }: {
   children: JSX.Element | JSX.Element[];
-}) {
+}) => {
   const googleApi = useGoogleApiProvider();
   return (
     <googleApiContext.Provider value={googleApi}>
       {children}
     </googleApiContext.Provider>
   );
-}
+};
 
-export interface GoogleApi {
+interface GoogleApi {
   isGoogleApiReady: boolean;
 }
 

@@ -21,15 +21,15 @@ const Cloud = styled.div`
   background: linear-gradient(top, #fff 5%, #f1f1f1 100%);
   border-radius: 100px;
   box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-  height: 80px;
+  height: 40px;
   position: relative;
-  width: 250px;
+  width: 125px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: monospace;
   animation: ${float} 6s ease-in-out infinite;
-  margin-top: 60px;
+  margin-top: 40px;
 
   &::after,
   &::before {
@@ -59,9 +59,9 @@ const Cloud = styled.div`
 
 const LogoText = styled.div`
   color: ${secondary};
-  font-size: 20px;
+  font-size: 15px;
   align-self: flex-end;
-  padding-bottom: 20px;
+  padding-bottom: 12.5px;
   font-weight: 600;
 `;
 

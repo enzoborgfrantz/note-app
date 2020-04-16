@@ -1,30 +1,43 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
+import { Transition, TransitionGroup } from "react-transition-group";
+
+import { Button } from "../Button";
 import { Memory } from "../Memory";
 import { Input } from "../Input";
 import { ActionPanel } from "../ActionPanel";
 import { LoadingScreen } from "../LoadingScreen";
-import { FadeIn } from "../FadeIn";
-import { useGoogleDrive } from "../../shared/hooks/useGoogleDrive";
 import { useGoogleAuth } from "../../shared/hooks/useGoogleAuth";
 import { useGoogleApi } from "../../shared/hooks/useGoogleApi";
+import { useStore } from "../../shared/hooks/useStore";
+import { Fade } from "../Fade";
+import { AddMemory } from "../AddMemory";
 
-const Collection = styled.div`
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 400px;
-`;
+const Collection = styled.div(({ theme }) => [
+  css`
+    height: auto;
+    max-height: 100%;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    transition: height 150ms ease-in;
+    padding: 0;
+  `,
+]);
 
 const Searchbar = styled.div`
-  padding: 15px;
   background-color: #ebebeb;
 `;
 
 const Memories = styled.div`
-  padding: 15px;
+  padding: 10px 0;
+
+  &:empty {
+    padding: 10px 0 0;
+  }
+
   > * {
     &:not(:first-child) {
       margin-top: 10px;
@@ -34,10 +47,13 @@ const Memories = styled.div`
 
 const LoadingScreenWrapper = styled.div`
   margin: 15px 0;
+  height: 100%;
 `;
 
-const StyledFadeIn = styled(FadeIn)`
-  min-height: 430px;
+const Wrapper = styled(Fade)`
+  padding: 15px;
+  background-color: #ebebeb;
+  /* min-height: 430px; */
 `;
 
 const Loading = () => (
@@ -46,10 +62,19 @@ const Loading = () => (
   </LoadingScreenWrapper>
 );
 
+const AddMemorySection = styled.div`
+  background-color: #ebebeb;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+`;
+
 export default () => {
+  const { add, remove, update, items: memories } = useStore();
   const { isGoogleApiReady } = useGoogleApi();
   const { isUserAuthenticated } = useGoogleAuth();
-  const { files: memories, isFetchingFiles, fetchFiles } = useGoogleDrive();
+  const [showAddMemory, setShowAddMemory] = useState(false);
+  // const { files: memories, isFetchingFiles, fetchFiles } = useGoogleDrive();
 
   if (!isGoogleApiReady) {
     return (
@@ -67,31 +92,41 @@ export default () => {
     );
   }
 
-  console.log({ isFetchingFiles, memories });
-
-  const refresh = fetchFiles || (() => {});
+  const isLoading = false; // @TODO
 
   return (
     <Collection>
-      {isFetchingFiles ? (
+      {isLoading ? (
         <LoadingScreenWrapper>
           <LoadingScreen />
         </LoadingScreenWrapper>
       ) : (
-        <StyledFadeIn>
+        <Wrapper isVisible={!isLoading}>
           <Searchbar>
-            <Input whiteBackground placeholder="search" />
+            <Input placeholder="search" />
           </Searchbar>
-          <ActionPanel refresh={refresh} />
           <Memories>
-            {memories &&
-              // @ts-ignore
-              memories.map(({ name, ...memory }) => (
+            <TransitionGroup component={null}>
+              {memories &&
                 // @ts-ignore
-                <Memory value={name} {...memory} />
-              ))}
+                Object.entries(memories).map(([key, memory]) => (
+                  // @ts-ignore
+                  <Memory
+                    {...memory}
+                    id={key}
+                    remove={remove}
+                    update={update}
+                  />
+                ))}
+            </TransitionGroup>
           </Memories>
-        </StyledFadeIn>
+          <AddMemory add={add} />
+          {/* <AddMemorySection>
+            <Button autoWidth onClick={() => setShowAddMemory(true)}>
+              Add Memory
+            </Button>
+          </AddMemorySection> */}
+        </Wrapper>
       )}
     </Collection>
   );

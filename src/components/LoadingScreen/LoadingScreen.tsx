@@ -4,7 +4,7 @@ import { Cloud, CloudSizes } from "./Cloud";
 
 const LoadingScreenWrapper = styled.div`
   width: 100%;
-  height: 400px;
+  height: 100%;
   background-color: white;
   position: relative;
   box-sizing: border-box;
@@ -18,5 +18,7 @@ export const LoadingScreen = () => (
     <Cloud size={CloudSizes.M} top={155} />
     <Cloud size={CloudSizes.XS} top={270} />
     <Cloud size={CloudSizes.S} top={335} />
+    <Cloud size={CloudSizes.M} top={420} />
+    <Cloud size={CloudSizes.XS} top={535} />
   </LoadingScreenWrapper>
 );
