@@ -35,16 +35,15 @@ const MemoryWrapper = styled.div<{ state: State }>`
   &:hover {
     background-color: #f7f7f7;
   }
-  height: 40px;
+  min-height: 40px;
   overflow: hidden;
+
   /* transition: all ${animationDuration}ms ease-in; */
   /* opacity: ${({ state }: { state: State }) => {
-    console.log({ state });
     return state === "entered" ? 1 : 0;
   }};
 
   height: ${({ state }: { state: State }) => {
-    console.log({ state });
     return state === "entered" ? "45px" : "0px";
   }}; */
 `;
@@ -71,6 +70,7 @@ const IconWrapper = styled.div<{ isHovered: boolean }>`
 
 const ValueWrapper = styled.div`
   padding: 15px 15px;
+  word-break: break-all;
 `;
 
 interface MemoryProps extends MemoryType {
@@ -82,7 +82,7 @@ export default ({ id, remove, update, value, ...rest }: MemoryProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [editValue, setEditValue] = useState(value);
-  console.log({ rest });
+  // console.log({ rest });
 
   const onKeyDown = ({ key }: { key: string }) => {
     if (key === "Enter") {

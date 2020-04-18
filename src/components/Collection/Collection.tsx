@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { Transition, TransitionGroup } from "react-transition-group";
 
@@ -9,14 +9,13 @@ import { ActionPanel } from "../ActionPanel";
 import { LoadingScreen } from "../LoadingScreen";
 import { useGoogleAuth } from "../../shared/hooks/useGoogleAuth";
 import { useGoogleApi } from "../../shared/hooks/useGoogleApi";
-import { useStore } from "../../shared/hooks/useStore";
+import { AddItem, useStore } from "../../shared/hooks/useStore";
 import { Fade } from "../Fade";
 import { AddMemory } from "../AddMemory";
 
 const Collection = styled.div(({ theme }) => [
   css`
     height: auto;
-    max-height: 100%;
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
@@ -24,6 +23,8 @@ const Collection = styled.div(({ theme }) => [
     width: 100%;
     transition: height 150ms ease-in;
     padding: 0;
+    display: flex;
+    flex-direction: column;
   `,
 ]);
 
@@ -32,10 +33,14 @@ const Searchbar = styled.div`
 `;
 
 const Memories = styled.div`
-  padding: 10px 0;
+  flex: 1;
+  overflow-y: scroll;
+  margin: 10px 0;
+  height: 100%;
+  box-sizing: border-box;
 
   &:empty {
-    padding: 10px 0 0;
+    margin: 10px 0 0;
   }
 
   > * {
@@ -53,7 +58,9 @@ const LoadingScreenWrapper = styled.div`
 const Wrapper = styled(Fade)`
   padding: 15px;
   background-color: #ebebeb;
-  /* min-height: 430px; */
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Loading = () => (
@@ -74,6 +81,7 @@ export default () => {
   const { isGoogleApiReady } = useGoogleApi();
   const { isUserAuthenticated } = useGoogleAuth();
   const [showAddMemory, setShowAddMemory] = useState(false);
+  const memoriesRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   // const { files: memories, isFetchingFiles, fetchFiles } = useGoogleDrive();
 
   if (!isGoogleApiReady) {
@@ -92,6 +100,17 @@ export default () => {
     );
   }
 
+  const addMemory: AddItem = (memory) => {
+    const memoryInfo = add(memory);
+    setTimeout(() => {
+      // @TODO find a nicer solution
+      if (memoriesRef && memoriesRef.current) {
+        memoriesRef.current.scrollTop = memoriesRef.current.scrollHeight - 150;
+      }
+    }, 100);
+    return memoryInfo;
+  };
+
   const isLoading = false; // @TODO
 
   return (
@@ -105,7 +124,7 @@ export default () => {
           <Searchbar>
             <Input placeholder="search" />
           </Searchbar>
-          <Memories>
+          <Memories ref={memoriesRef}>
             <TransitionGroup component={null}>
               {memories &&
                 // @ts-ignore
@@ -120,7 +139,7 @@ export default () => {
                 ))}
             </TransitionGroup>
           </Memories>
-          <AddMemory add={add} />
+          <AddMemory add={addMemory} />
           {/* <AddMemorySection>
             <Button autoWidth onClick={() => setShowAddMemory(true)}>
               Add Memory

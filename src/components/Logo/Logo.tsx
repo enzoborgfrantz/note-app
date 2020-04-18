@@ -61,7 +61,8 @@ const LogoText = styled.div`
   color: ${secondary};
   font-size: 15px;
   align-self: flex-end;
-  padding-bottom: 12.5px;
+  /* padding-bottom: 12.5px; */
+  padding: 0 10px 12.5px;
   font-weight: 600;
 `;
 

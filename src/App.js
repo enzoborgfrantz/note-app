@@ -31,7 +31,6 @@ const AppWrapper = styled.div(({ theme }) => [
     height: 100vh;
     padding: 5vh 15vw 5vh;
     box-sizing: border-box;
-
     ${theme.mobile(css`
       padding: 15px;
     `)}
@@ -47,10 +46,6 @@ const Header = styled.div(({ theme }) => [
     align-items: center;
   `,
 ]);
-
-const Content = styled.div`
-  height: 100%;
-`;
 
 function App() {
   return (

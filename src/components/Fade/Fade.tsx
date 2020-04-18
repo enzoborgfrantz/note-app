@@ -18,7 +18,7 @@ const animationDuration = 1500;
 const Wrapper = styled.div<WrapperProps>`
   transition: opacity ${animationDuration}ms ease-in-out;
   opacity: ${({ state }: { state: State }) => {
-    console.log({ state });
+    // console.log({ state });
     return state === "entered" ? 1 : 0;
   }};
 `;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../Button";
 import { Input } from "../Input";
@@ -31,11 +31,12 @@ const ButtonWrapper = styled.div`
 const AddMemory = ({ add }: AddMemoryProps) => {
   const [showInput, setShowInput] = useState(false);
   const [value, setValue] = useState("");
+  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const addMemory = () => {
     add({ value });
     setValue("");
-    setShowInput(false);
+    inputRef.current.focus();
   };
 
   const cancelAddMemory = () => {
@@ -58,6 +59,7 @@ const AddMemory = ({ add }: AddMemoryProps) => {
       ) : (
         <InputWrapper>
           <Input
+            innerRef={inputRef}
             autoFocus
             // @ts-ignore
             onKeyDown={onKeyDown}
